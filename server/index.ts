@@ -6,6 +6,29 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Add CORS middleware for production
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    const allowedOrigins = [process.env.FRONTEND_URL || 'https://your-netlify-app.netlify.app'];
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+    next();
+  });
+}
+
+// Add health check endpoint
+app.get('/api/health', (_, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -59,7 +82,7 @@ app.use((req, res, next) => {
   // ALWAYS serve the app on port 5000
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = 5000;
+  const port = process.env.PORT || 5000;
   server.listen({
     port,
     host: "0.0.0.0",
