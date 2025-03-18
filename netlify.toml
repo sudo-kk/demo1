@@ -1,10 +1,11 @@
 [build]
   base = "/"
-  command = "npm run build:frontend"
+  command = "npm run build"
   publish = "dist/public"
 
 [build.environment]
   NODE_VERSION = "18"
+  VITE_API_URL = "https://your-railway-app.railway.app"
 
 [[redirects]]
   from = "/*"
@@ -16,3 +17,4 @@
   [headers.values]
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
