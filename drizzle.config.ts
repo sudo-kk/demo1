@@ -9,7 +9,7 @@ export default {
   out: './drizzle',
   driver: 'pg',
   dbCredentials: {
-    connectionString: process.env.DATABASE_URL || '',
+    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:WqPusFEkgBrutRSzIHZLJmOMdpIodubn@ballast.proxy.rlwy.net:23666/railway',
   },
   verbose: true,
   strict: true,
